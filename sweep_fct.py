@@ -11,11 +11,11 @@ class sweep_fct():
         import RPi.GPIO as GPIO
         
         #Initialise the General Purpose Input Output (pins)
-        self.pinGPIO = 12 #Input the cosen pin for the servo
+        self.pinGpio = 12 #Input the cosen pin for the servo
         
         GPIO.cleanup()
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(self.pinGPIO, GPIO.OUT)
+        GPIO.setup(self.pinGpio, GPIO.OUT)
         
         #Initialise the I2C
         self.i2c_ch = 1 #Input the I2C channel for the laser
@@ -36,7 +36,7 @@ class sweep_fct():
         self.Cseparator = ColumnSeparator
 
         #Initialise the servo position
-        self.servo = GPIO.PWM(self.pinGPIO, 50)  # 50hz frequency
+        self.servo = GPIO.PWM(self.pinGpio, 50)  # 50hz frequency
         self.servo.start(3.5) # Starting position must be the same as first number of self.control
         self.control = [2.5,3,3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7,7.5,8,8.5,9,9.5,10] #Steps of the servo
 
@@ -46,17 +46,16 @@ class sweep_fct():
         
         #Initialise the values for the sweep  
         self.step= 16
-        self.step2 = 15
         self.count = 0
         self.delay = 0.1
         values = []
         values2 = [X,Y,Ang]
         
         #Start the first sweep for a given number of steps
-        for x in range(self.step):
+        for n in range(self.step):
             
             #Give the array of steps
-            self.servo.ChangeDutyCycle(self.control[x])
+            self.servo.ChangeDutyCycle(self.control[n])
             #Wait for the signal to come back
             time.sleep(self.delay)
             
@@ -68,16 +67,17 @@ class sweep_fct():
             
             #If valu superior to range of the laser put -1
             if self.length_val>=2000:
-                self.length_val=-1
-            
+               self.length_val=-1
+               
+            print(self.length_val)
             #Add valu to list of the sweep
             values.append(self.length_val)
             self.count +=1
             
         #This is the same as the first sweep it just go backward 
-        for y in range(self.step):
+        for m in range(self.step):
             
-            self.servo.ChangeDutyCycle(self.control[self.step2-y])
+            self.servo.ChangeDutyCycle(self.control[self.step-1-m])
             time.sleep(self.delay)
             
             self.data = self.bus.read_i2c_block_data(self.i2c_address,0,2)
@@ -86,8 +86,9 @@ class sweep_fct():
             self.length_val|=  self.data[1]
             
             if self.length_val>=2000:
-                self.length_val=-1
-            
+               self.length_val=-1
+               
+            print(self.length_val)
             values.append(self.length_val)
             self.count +=1
             
@@ -95,7 +96,7 @@ class sweep_fct():
         for i in range(self.step):
             
             #For each line recorded add a value of the average to the list
-            values2.append((values[i]+values[2*self.step2-i])/2)
+            values2.append((values[i]+values[2*self.step-1-i])/2)
             
         print(values)
         print(values2)

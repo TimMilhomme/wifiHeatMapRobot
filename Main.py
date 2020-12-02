@@ -9,6 +9,7 @@ import dbus
 import dbus.mainloop.glib
 from gi.repository import GObject as gobject
 from optparse import OptionParser
+from save_fct import *
 
 proxSensorsVal = [0, 0, 0, 0, 0]
 forwardButton = [0]
@@ -17,12 +18,16 @@ i = 0
 j = 0
 data = []
 direction = 0
-maxTime = 30
+maxTime = 600
 running = False
+flag = True
 dist = 0
+sweeping = []
 
-# sweeper = sweep_fct('\n', ';', 'mapping', False)
+sweeper = sweep_fct('\n', ';', 'mapping', False)
 odo = odometry_thymio()
+saver = save_fct('\n',';','mapping',True)
+saver2 = save_fct('\n',';','wifi',True)
 
 wifi = 0  # getWifi()
 data.append([i, j, wifi])
@@ -40,7 +45,7 @@ def modpi(angle):
     return angle
 
 
-def getWifi():
+def getWifi(wantedWifi):
 
     # using the check_output() for having the network term retrival
     networks = check_output(["iwlist", "wlan0", "scan"])
@@ -51,9 +56,9 @@ def getWifi():
     # Splitting the different networks
     networkList = networks.split('Cell')
     networkList.remove(networkList[0])
-
-    # Creating a list of wifi intensity by network name
-    networkIntensityList = []
+    
+    quality = 0
+    
     for i in range(0, len(networkList)-1):
 
         # print(i)
@@ -61,16 +66,20 @@ def getWifi():
         # print(network)
         networkName = network[5].split('\"')[1]
         # print(networkName)
-        networkIntensity = network[3].split('/')[0]
-        networkIntensity = int("".join(filter(str.isdigit, networkIntensity)))
-        quality = int(networkIntensity*100/70)
-        # print(quality)
-        networkIntensityList.append([networkName, quality])
+        if networkName == wantedWifi:
+            
+            networkIntensity = network[3].split('/')[0]
+            networkIntensity = int("".join(filter(str.isdigit, networkIntensity)))
+            quality = int(networkIntensity*100/70) 
 
-    # print(networkIntensityList)
+    return quality
 
-    return networkIntensityList
-
+def getWifiNoZero(wantedWifi):
+    val = 0
+    while val == 0:
+        val = getWifi(wantedWifi)
+    
+    return val
 
 def sensorFront():
 
@@ -83,30 +92,37 @@ def sensorFront():
     global startTime
     global running
     global dist
-
+    global flag
+    global sweeping
+    
     network.GetVariable("thymio-II", "button.forward",reply_handler=get_button_forward_reply,error_handler=get_variables_error)
     
-    # print the proximity sensors value in the terminal
-    # print("proxSensor")
-    #dist = proxSensorsVal[2]
-    #print(dist)
-    
-    if forwardButton[0] == 1:
-        startTime = time.time()
-        running = True
+    if flag:
+        if forwardButton[0] == 1:
+            print('check')
+            startTime = time.time()
+            running = True
+            flag = False
+            x = i*150
+            y = j*150
+            sweeping = sweeper.sweepMode(x, y, direction)
+            saver.NewRow(*sweeping)
+            wifi = getWifiNoZero('VM514D00')
+            data.append([i, j, wifi])
+            datawifi = [i, j, wifi]
+            saver2.NewRow(*datawifi)
         
-    print(dist)
-    
     if running:
-    
-        if dist > 1000:
+        
+        if (sweeping[6] >= 0 and sweeping[6] < 250) or (sweeping[7] >= 0 and sweeping[7] < 250) or (sweeping[8] >= 0 and sweeping[8] < 250) or (sweeping[9] >= 0 and sweeping[9] < 250):
+            print('turning')
             if direction == 0:
                 ib = i+1
                 jb = j
             if direction == math.pi/2:
                 ib = i
                 jb = j+1
-            if direction == math.pi or -math.pi:
+            if direction == math.pi or direction == -math.pi:
                 ib = i-1
                 jb = j
             if direction == -math.pi/2:
@@ -123,31 +139,42 @@ def sensorFront():
                 odo.turn_right(90)
                 direction -= math.pi/2
                 direction = modpi(direction)
+            x = i*150
+            y = j*150
+            sweeping = sweeper.sweepMode(x, y, direction)
+            saver.NewRow(*sweeping)
+            wifi = getWifiNoZero('VM514D00')
+            data.append([i, j, wifi])
+            datawifi = [i, j, wifi]
+            saver2.NewRow(*datawifi)
+            
         else:
-            odo.forward_dist(10)
+            print('forward')
+            odo.forward_dist(15)
             if direction == 0:
                 i = i+1
             if direction == math.pi/2:
                 j = j+1
-            if direction == math.pi or -math.pi:
+            if direction == math.pi or direction == -math.pi:
                 i = i-1
             if direction == -math.pi/2:
                 j = j-1
-            wifi = 0  # getWifi()
+            x = i*150
+            y = j*150
+            sweeping = sweeper.sweepMode(x, y, direction)
+            saver.NewRow(*sweeping)
+            wifi = getWifiNoZero('VM514D00')
             data.append([i, j, wifi])
-            x = i*50
-            y = j*50
-
-            # sweeper.sweepMode(i, j, direction)
+            datawifi = [i, j, wifi]
+            saver2.NewRow(*datawifi)
+            
         
         runTime = time.time()-startTime
         if runTime > maxTime:
+            print(data)
+            saver.closeFile()
+            saver2.closeFile()
             loop.quit()
-            
-    # get the values of the sensors
-    network.GetVariable("thymio-II", "prox.horizontal", reply_handler=get_variables_reply, error_handler=get_variables_error)
-    
-    dist = proxSensorsVal[2]
 
     return True
 
@@ -180,5 +207,8 @@ def connect_to_thymio():
 network = connect_to_thymio()
 loop = gobject.MainLoop()
 handle = gobject.timeout_add(10, sensorFront)  # every 0.01 sec
+print('Press forward button')
 loop.run()
 # print heatmap
+
+

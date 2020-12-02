@@ -1,5 +1,8 @@
 from subprocess import check_output
 import numpy as np
+import time
+
+
 def getWifi(wantedWifi):
 
     # using the check_output() for having the network term retrival
@@ -31,5 +34,30 @@ def getWifi(wantedWifi):
 
     return quality
 
-intensity = getWifi('VM514D00')
+"""
+def getWifiAvg(wantedWifi, itr):
+    val = 0
+    count = 0
+    quality = 0
+    qualityAvg = 0
+    for i in range(itr):
+        val = getWifi(wantedWifi)
+        if val != 0:
+            quality += val
+            count += 1
+    if count != 0:
+        qualityAvg = quality/count
+    
+    return qualityAvg"""
+
+
+def getWifiNoZero(wantedWifi):
+    val = 0
+    while val == 0:
+        val = getWifi(wantedWifi)
+    
+    return val
+
+
+intensity = getWifiNoZero('VM514D00')
 print (intensity)

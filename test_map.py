@@ -71,7 +71,12 @@ def getWifi(wantedWifi):
 
     return quality
 
-
+def getWifiNoZero(wantedWifi):
+    val = 0
+    while val == 0:
+        val = getWifi(wantedWifi)
+    
+    return val
 
 def sensorFront():
 
@@ -95,11 +100,11 @@ def sensorFront():
     if forwardButton[0] == 1:
         startTime = time.time()
         running = True
-        
+    print('Press forward button')    
     
     if running:
         
-        for i in range(10):
+        for i in range(2):
             for i in range(2):
 
                 odo.forward_dist(15)
@@ -107,7 +112,7 @@ def sensorFront():
                     i = i+1
                 if direction == math.pi/2:
                     j = j+1
-                if direction == math.pi or -math.pi:
+                if direction == math.pi or direction == -math.pi:
                     i = i-1
                 if direction == -math.pi/2:
                     j = j-1
@@ -115,7 +120,7 @@ def sensorFront():
                 y = j*150
                 sweeping = sweeper.sweepMode(x, y, direction)
                 saver.NewRow(*sweeping)
-                wifi = getWifi('VM514D00')
+                wifi = getWifiNoZero('VM514D00')
                 data.append([i, j, wifi])
         
             odo.turn_left(90)
@@ -127,7 +132,7 @@ def sensorFront():
                 i = i+1
             if direction == math.pi/2:
                 j = j+1
-            if direction == math.pi or -math.pi:
+            if direction == math.pi or direction == -math.pi:
                 i = i-1
             if direction == -math.pi/2:
                 j = j-1
@@ -135,7 +140,7 @@ def sensorFront():
             y = j*150
             sweeping = sweeper.sweepMode(x, y, direction)
             saver.NewRow(*sweeping)
-            wifi = getWifi('VM514D00')
+            wifi = getWifiNoZero('VM514D00')
             data.append([i, j, wifi])
         
             odo.turn_left(90)
@@ -149,7 +154,7 @@ def sensorFront():
                     i = i+1
                 if direction == math.pi/2:
                     j = j+1
-                if direction == math.pi or -math.pi:
+                if direction == math.pi or direction == -math.pi:
                     i = i-1
                 if direction == -math.pi/2:
                     j = j-1
@@ -157,7 +162,7 @@ def sensorFront():
                 y = j*150
                 sweeping = sweeper.sweepMode(x, y, direction)
                 saver.NewRow(*sweeping)
-                wifi = getWifi('VM514D00')
+                wifi = getWifiNoZero('VM514D00')
                 data.append([i, j, wifi])
                 
             odo.turn_right(90)
@@ -169,7 +174,7 @@ def sensorFront():
                 i = i+1
             if direction == math.pi/2:
                 j = j+1
-            if direction == math.pi or -math.pi:
+            if direction == math.pi or direction == -math.pi:
                 i = i-1
             if direction == -math.pi/2:
                 j = j-1
@@ -177,7 +182,7 @@ def sensorFront():
             y = j*150
             sweeping = sweeper.sweepMode(x, y, direction)
             saver.NewRow(*sweeping)
-            wifi = getWifi('VM514D00')
+            wifi = getWifiNoZero('VM514D00')
             data.append([i, j, wifi])
             
             odo.turn_right(90)
@@ -191,7 +196,7 @@ def sensorFront():
                     i = i+1
                 if direction == math.pi/2:
                     j = j+1
-                if direction == math.pi or -math.pi:
+                if direction == math.pi or direction == -math.pi:
                     i = i-1
                 if direction == -math.pi/2:
                     j = j-1
@@ -199,7 +204,7 @@ def sensorFront():
                 y = j*150
                 sweeping = sweeper.sweepMode(x, y, direction)
                 saver.NewRow(*sweeping)
-                wifi = getWifi('VM514D00')
+                wifi = getWifiNoZero('VM514D00')
                 data.append([i, j, wifi]) 
             
         

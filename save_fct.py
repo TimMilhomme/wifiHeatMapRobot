@@ -5,9 +5,9 @@ class save_fct():
 
         x = datetime.datetime.now()
         if(Dated):
-            self.name = "/home/pi/Desktop/01_12_2020_V3/log/"+FileName+'_'+'Date_'+str(x)[0:10]+'_'+str(x)[11:13]+'-'+str(x)[14:16]+".csv"
+            self.name = "/home/pi/Desktop/02_12_2020/log/"+FileName+'_'+'Date_'+str(x)[0:10]+'_'+str(x)[11:13]+'-'+str(x)[14:16]+".csv"
         else:
-            self.name = "/home/pi/Desktop/01_12_2020_V3/log/"+FileName+".csv"
+            self.name = "/home/pi/Desktop/02_12_2020/log/"+FileName+".csv"
         self.file1 = open(self.name, 'w')
         print(self.name)
         self.Rseparator = RowSeparator

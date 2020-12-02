@@ -43,7 +43,7 @@ class odometry_thymio():
 
         #Move robot at the speed between 0 and 500
         totalRight=totalRight*4+200
-        totalLeft=totalLeft*4+200
+        totalLeft=totalLeft*4+193
         
         #send motor value to the robot
         network.SetVariable("thymio-II", "motor.left.target", [totalLeft])
@@ -69,7 +69,7 @@ class odometry_thymio():
         
         #angle is the angle we want the robot to turn in radian 
         #This coeficient was find experimentally adjust it with the type of ground and the speed of the robot
-        delay = angle*0.0115#seconds
+        delay = angle*0.01151  #seconds
         
         #Connect to the robot
         network = self.connect_to_thymio()
@@ -97,7 +97,7 @@ class odometry_thymio():
         totalRight = 0
         totalLeft = 0
 
-        delay = angle*0.0115
+        delay = angle*0.01151
 
         network = self.connect_to_thymio()
 
