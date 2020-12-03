@@ -9,14 +9,17 @@ import dbus.mainloop.glib
 from gi.repository import GObject as gobject
 from optparse import OptionParser
 
+from wifi_fct import*
 from save_fct import *
 from sweep_fct import *
 from odometry_thymio import *
 
+
 odo = odometry_thymio()
 sweeper = sweep_fct()
-saver = save_fct('\n',';','/home/pi/Desktop/03_12_2020_V2/log/','mapping',True)
-saver2 = save_fct('\n',';','/home/pi/Desktop/03_12_2020_V2/log/','wifi',True)
+wi = wifi_fct()
+saver = save_fct('\n',';','/home/pi/Desktop/wifiHeatMapRobot/log/','mapping',True)
+saver2 = save_fct('\n',';','/home/pi/Desktop/wifiHeatMapRobot/log/','wifi',True)
 
 running = False
 flag = True
@@ -31,7 +34,7 @@ direction = 0
 datawifi = []
 sweeping = []
 
-maxTime = 300
+maxTime = 30
 travelled_dist = 200
 obstacle_dist =300
 
@@ -49,45 +52,6 @@ def modpi(angle):
 
     return angle
 
-# This function gathers a list of wifi intensities associated to the name of its network
-def getWifi(wantedWifi):
-
-    # using the check_output() for having the network term retrival
-    networks = check_output(["iwlist", "wlan0", "scan"])
-
-    # decoding it to strings
-    networks = networks.decode('ascii')
-
-    # Splitting the different networks
-    networkList = networks.split('Cell')
-    networkList.remove(networkList[0])
-    
-    quality = 0
-    
-    # Creating a list of wifi intensity by network name
-    for i in range(0, len(networkList)-1):
-
-        network = networkList[i].split('\n')
-        networkName = network[5].split('\"')[1]
-        if networkName == wantedWifi:
-            
-            networkIntensity = network[3].split('/')[0]
-            networkIntensity = int("".join(filter(str.isdigit, networkIntensity)))
-            quality = int(networkIntensity*100/70) 
-
-    return quality
-
-# This function allows us to get rid of parasitic values of wifi intensity but adds a lot of waiting
-def getWifiNoZero(wantedWifi):
-    
-    # Waiting for a no-zero/parasite value of the wifi intensity
-    val = 0
-    while val == 0:
-        val = getWifi(wantedWifi)
-    
-    return val
-
-
 def get_button_forward_reply(r):
     global forwardButton
     forwardButton=r
@@ -95,7 +59,6 @@ def get_variables_error(e):
     print('error:')
     print(str(e))
     loop.quit()
-
 
 # This function is executed over and over until the loop is quitted
 # Its purpose is to allow the user to launch the robot whe desired
@@ -135,7 +98,7 @@ y = j*travelled_dist
 sweeping = sweeper.sweepMode(x, y, direction)
 saver.NewRow(*sweeping)
 # Finally it gathers the wifi intensity and saves it
-wifi = getWifiNoZero('VM514D00')
+wifi = wi.getWifiNoZero('VM514D00')
 datawifi = [i, j, wifi]
 saver2.NewRow(*datawifi)
 
@@ -180,7 +143,7 @@ while running:
         y = j*travelled_dist
         sweeping = sweeper.sweepMode(x, y, direction)
         saver.NewRow(*sweeping)
-        wifi = getWifiNoZero('VM514D00')
+        wifi = wi.getWifiNoZero('VM514D00')
         datawifi = [i, j, wifi]
         saver2.NewRow(*datawifi)
         
@@ -201,7 +164,7 @@ while running:
         # Then it performs a sweep and saves the values
         sweeping = sweeper.sweepMode(x, y, direction)
         saver.NewRow(*sweeping)
-        wifi = getWifiNoZero('VM514D00')
+        wifi = wi.getWifiNoZero('VM514D00')
         datawifi = [i, j, wifi]
         saver2.NewRow(*datawifi)
         
