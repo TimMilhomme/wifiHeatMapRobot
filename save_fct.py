@@ -1,13 +1,13 @@
 import datetime
 class save_fct():
-    #                   String      String          String  Bool
-    def __init__(self,RowSeparator,ColumnSeparator,FileName,Dated):
+    #                   String      String          String    String  Bool
+    def __init__(self,RowSeparator,ColumnSeparator,Directory,FileName,Dated):
 
         x = datetime.datetime.now()
         if(Dated):
-            self.name = "/home/pi/Desktop/02_12_2020_V2/log/"+FileName+'_'+'Date_'+str(x)[0:10]+'_'+str(x)[11:13]+'-'+str(x)[14:16]+".csv"
+            self.name = Directory + FileName+'_' + 'Date_' + str(x)[0:10] + '_' + str(x)[11:13] + '-' + str(x)[14:16] + ".csv"
         else:
-            self.name = "/home/pi/Desktop/02_12_2020_V2/log/"+FileName+".csv"
+            self.name = Directory + FileName + ".csv"
         self.file1 = open(self.name, 'w')
         print(self.name)
         self.Rseparator = RowSeparator

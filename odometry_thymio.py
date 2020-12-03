@@ -116,68 +116,13 @@ class odometry_thymio():
         network.SetVariable("thymio-II", "motor.right.target", [totalRight])
         return True
     
-    #Function starting the code and waiting to activate the central button
-    def start_button(self):
-        
-        centralButton=[0]
-        forwardButton=[0]
+    #Function to get the forward button value 0 nothing 1 click
+    def get_button_forward_reply(self, r):
+        global forwardButton
+        forwardButton=r
 
-        stop = False
-        flag = False
-
-        def waiting():
-            global stop
-            global flag
-            
-            #get the value of the center button
-            network.GetVariable("thymio-II", "button.center",reply_handler=get_button_reply,error_handler=get_variables_error)
-            #get the value of the foward button
-            network.GetVariable("thymio-II", "button.forward",reply_handler=get_button_forward_reply,error_handler=get_variables_error)
-
-                
-            if centralButton[0] == 1:
-                if flag:
-                    stop = not stop
-                    flag=False
-            else:
-                flag=True;
-                
-            if forwardButton[0] == 1:
-                print("Quit")
-                loop.quit()
-                   
-            if stop == True:
-                print("Stop")  
-         
-            return True
-
-        #Function to get the central button value 0 nothing 1 click
-        def get_button_reply(r):
-            global centralButton
-            centralButton=r
-
-        #Function to get the forward button value 0 nothing 1 click
-        def get_button_forward_reply(r):
-            global forwardButton
-            forwardButton=r
-
-        #Function to detect error and quit loop
-        def get_variables_error(e):
-            print ('error:')
-            print (str(e))
-            loop.quit()
-            
-        if __name__ == '__main__':
-            
-            network = self.connect_to_thymio()
-         
-            #print in the terminal the name of each Aseba NOde
-            print (network.GetNodesList())
-         
-            #GObject loop
-            print ('starting loop')
-            loop = gobject.MainLoop()
-            #call the callback of waiting algorithm
-            handle = gobject.timeout_add (10, waiting) #every 0.01 sec
-            loop.run()
-        return True
+    #Function to detect error and quit loop
+    def get_variables_error(self, e):
+        print ('error:')
+        print (str(e))
+        loop.quit()

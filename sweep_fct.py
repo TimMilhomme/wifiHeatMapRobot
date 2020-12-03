@@ -7,7 +7,7 @@ import datetime
 class sweep_fct():
     
     #Initialise the function
-    def __init__(self,RowSeparator,ColumnSeparator,FileName,Dated):
+    def __init__(self):
         import RPi.GPIO as GPIO
         
         #Initialise the General Purpose Input Output (pins)
@@ -23,17 +23,6 @@ class sweep_fct():
         self.i2c_address = 0x52
         self.reg_add = 0x00
         self.bus = smbus.SMBus(self.i2c_ch)
-        
-        #Create a filename with the date and time of recording
-        x = datetime.datetime.now()
-        if(Dated):
-            name = FileName+'_'+'Date_'+str(x)[0:10]+'_'+str(x)[11:13]+'-'+str(x)[14:16]+".csv"
-        else:
-            name = FileName
-        print(name)
-        self.file1 = open(name, 'w')
-        self.Rseparator = RowSeparator
-        self.Cseparator = ColumnSeparator
 
         #Initialise the servo position
         self.servo = GPIO.PWM(self.pinGpio, 50)  # 50hz frequency
