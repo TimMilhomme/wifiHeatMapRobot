@@ -96,8 +96,12 @@ class sweep_fct():
         for i in range(self.step):
             
             #For each line recorded add a value of the average to the list
-            values2.append((values[i]+values[2*self.step-1-i])/2)
-            
+            if values[i] ==-1 or values[2*self.step-1-i]==-1:
+                values2.append(values[i]+values[2*self.step-1-i]+1)
+
+            else:
+                values2.append((values[i]+values[2*self.step-1-i])/2)
+                
         print(values)
         print(values2)
         return values2

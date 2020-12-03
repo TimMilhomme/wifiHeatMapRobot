@@ -18,10 +18,12 @@ i = 0
 j = 0
 data = []
 direction = 0
-maxTime = 600
+maxTime = 300
 running = False
 flag = True
-dist = 0
+travelled_dist = 300
+obstacle_dist =350
+
 sweeping = []
 
 sweeper = sweep_fct('\n', ';', 'mapping', False)
@@ -91,7 +93,8 @@ def sensorFront():
     global wifi
     global startTime
     global running
-    global dist
+    global travelled_dist
+    global obstacle_dist
     global flag
     global sweeping
     
@@ -103,8 +106,8 @@ def sensorFront():
             startTime = time.time()
             running = True
             flag = False
-            x = i*150
-            y = j*150
+            x = i*travelled_dist
+            y = j*travelled_dist
             sweeping = sweeper.sweepMode(x, y, direction)
             saver.NewRow(*sweeping)
             wifi = getWifiNoZero('VM514D00')
@@ -114,7 +117,7 @@ def sensorFront():
         
     if running:
         
-        if (sweeping[6] >= 0 and sweeping[6] < 250) or (sweeping[7] >= 0 and sweeping[7] < 250) or (sweeping[8] >= 0 and sweeping[8] < 250) or (sweeping[9] >= 0 and sweeping[9] < 250):
+        if (sweeping[6] >= 0 and sweeping[6] < obstacle_dist) or (sweeping[7] >= 0 and sweeping[7] < obstacle_dist) or (sweeping[8] >= 0 and sweeping[8] < obstacle_dist) or (sweeping[9] >= 0 and sweeping[9] < obstacle_dist):
             print('turning')
             if direction == 0:
                 ib = i+1
@@ -139,8 +142,8 @@ def sensorFront():
                 odo.turn_right(90)
                 direction -= math.pi/2
                 direction = modpi(direction)
-            x = i*150
-            y = j*150
+            x = i*travelled_dist
+            y = j*travelled_dist
             sweeping = sweeper.sweepMode(x, y, direction)
             saver.NewRow(*sweeping)
             wifi = getWifiNoZero('VM514D00')
@@ -150,7 +153,7 @@ def sensorFront():
             
         else:
             print('forward')
-            odo.forward_dist(15)
+            odo.forward_dist(travelled_dist)
             if direction == 0:
                 i = i+1
             if direction == math.pi/2:
@@ -159,8 +162,8 @@ def sensorFront():
                 i = i-1
             if direction == -math.pi/2:
                 j = j-1
-            x = i*150
-            y = j*150
+            x = i*travelled_dist
+            y = j*travelled_dist
             sweeping = sweeper.sweepMode(x, y, direction)
             saver.NewRow(*sweeping)
             wifi = getWifiNoZero('VM514D00')

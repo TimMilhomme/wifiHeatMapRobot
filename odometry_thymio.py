@@ -36,14 +36,14 @@ class odometry_thymio():
 
         #Create a delay with respect to the distance
         #This coeficient was find experimentally adjust it with the type of ground and the speed of the robot
-        delay = dist*0.15 #seconds
+        delay = dist*0.015 #seconds
         
         #Call the function connect to thymio
         network = self.connect_to_thymio()
 
         #Move robot at the speed between 0 and 500
-        totalRight=totalRight*4+200
-        totalLeft=totalLeft*4+193
+        totalRight=200
+        totalLeft=193
         
         #send motor value to the robot
         network.SetVariable("thymio-II", "motor.left.target", [totalLeft])
@@ -75,8 +75,8 @@ class odometry_thymio():
         network = self.connect_to_thymio()
 
         #Add oposit value to each wheels to make it turn on itself
-        totalRight=totalRight*4+200
-        totalLeft=totalLeft*4-200
+        totalRight=200
+        totalLeft=-200
         
         #send motor value to the robot
         network.SetVariable("thymio-II", "motor.left.target", [totalLeft])
@@ -101,8 +101,8 @@ class odometry_thymio():
 
         network = self.connect_to_thymio()
 
-        totalRight=totalRight*4-200
-        totalLeft=totalLeft*4+200
+        totalRight=-200
+        totalLeft=200
 
         network.SetVariable("thymio-II", "motor.left.target", [totalLeft])
         network.SetVariable("thymio-II", "motor.right.target", [totalRight])
