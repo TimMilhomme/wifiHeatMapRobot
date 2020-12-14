@@ -1,6 +1,6 @@
 # wifiHeatMapRobot
 
-This is a project where we couple a raspberry pi 4 with a Thymio II to create an autonomous vehicle able to map a room physically and by it's wifi intensity.
+This is a project where we use a raspberry pi 4 with a Thymio II to create an autonomous vehicle able to map a room physically and by it's wifi intensity.
 
 ## What do you need?
 
@@ -27,3 +27,7 @@ To use our code any Python IDE should be fine. Download the repository keep all 
 
 * The pdf containing the full report of the project is present in the repository
 * A video of the project is avaible on Youtube:
+
+## Contact
+
+If you have any question of ways of improving the project you can contct me at: a020598k@student.staffs.ac.uk
