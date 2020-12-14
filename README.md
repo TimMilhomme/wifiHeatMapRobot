@@ -16,10 +16,11 @@ This is a project where we use a raspberry pi 4 with a Thymio II to create an au
 
 ## How do you use the code?
 
-To use our code any Python IDE should be fine. Download the repository keep all the in the same folder as the main. You can change the parameter at the beginning of tha main.
+To use our code any Python IDE should be fine. Download the repository keep all the in the same folder as the main. You can change the parameter at the beginning of the Main.
+The Main will call 3 function odometry,sweep and save.
 
-* The code Mapper and mapperNew are to code to lunch once you obtain the data of the main code. They will create a map of the surrounding. 
-* The odometry function contain everithing to control the wheels of the thymio using an odometric system.
+* The Mapper and mapperNew are two code to lunch once you obtain the data of the main code. They will create a map of the surrounding. 
+* The odometry function contain everything to control the wheels of the thymio using an odometric system.
 * The sweep function combine the data of the laser with the servo motor rotation to harvest the position of the surrouding.
 * The save function save the data of the sweep function in a .cvs file.
 
