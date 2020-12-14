@@ -27,7 +27,7 @@ The Main will call 3 function odometry,sweep and save.
 ## More details
 
 * The pdf containing the full report of the project is present in the repository
-* A video of the project is avaible on Youtube:
+* A video of the project is avaible on Youtube: https://youtu.be/JUGqk_iCWYM
 
 ## Contact
 
