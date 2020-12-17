@@ -17,7 +17,7 @@ class wifi_fct:
         
         quality = 0
         
-        # Creating a list of wifi intensity by network name
+        # Retrieving the signal strength of the target network
         for i in range(0, len(networkList)-1):
 
             network = networkList[i].split('\n')
