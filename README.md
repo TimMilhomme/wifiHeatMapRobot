@@ -7,17 +7,17 @@ This is a project where we use a raspberry pi 4 with a Thymio II to create an au
 * Raspberry Pi 4
 * Thymio II
 * Servo Motor
-* Laser
+* Laser (Time of Flight sensor)
 * Battery
-* We 3D printed piece but you might get way with it with tape and blue tack
-* Jumpers cables
+* We 3D printed piece but you might get way with tape and blue tack
+* Jumper cables
 * USB-C to USB cable
 * Micro-USB to USB cable
 
 ## How do you use the code?
 
-To use our code any Python IDE should be fine. Download the repository keep all the in the same folder as the main. You can change the parameter at the beginning of the Main.
-The Main will call 3 function odometry,sweep and save.
+To use our code any Python IDE should be fine. Download the repository keep all the functions in the same folder as the main. You can change the parameters at the beginning of the Main.
+The Main will call 3 functions: odometry,sweep and save.
 
 * The Mapper and mapperNew are two code to lunch once you obtain the data of the main code. They will create a map of the surrounding. 
 * The odometry function contain everything to control the wheels of the thymio using an odometric system.
